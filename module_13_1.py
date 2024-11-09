@@ -1,11 +1,13 @@
-import time
+# import time
 import asyncio
 
 async def start_strongman(name, power):
+    k = 1
+    delay = k / power
     print(f'Силач {name} начал соревнование')
     for num_ball in range(1, 6):
         if power >= num_ball:
-            await asyncio.sleep(power)
+            await asyncio.sleep(delay)
             print(f'Силач {name} поднял {num_ball} шар')
     print(f'Силач {name} закончил соревнования')
 
