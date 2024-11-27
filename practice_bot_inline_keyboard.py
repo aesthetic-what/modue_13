@@ -1,4 +1,4 @@
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import ReplyKeyboardMarkup, ReplyKeyboardButton
 from aiogram.types import CallbackQuery
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
@@ -20,14 +20,13 @@ class UserState(StatesGroup):
     age = State()
     weight = State()
 
-test_keyboard = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text='Рассчитать каллории по формуле', callback_data='calc'), 
-                                                InlineKeyboardButton(text='Формула каллорий', callback_data='formula')]])
+test_keyboard = ReplyKeyboardMarkup(keyboard=[[ReplyKeyboardButton(text='Расчитать')]])
 
 @dp.message(CommandStart())
 async def start(message: Message):
     await message.answer('Привет я бот помогающий твоему здоровью',reply_markup=test_keyboard)
 
-@dp.callback_query(F.data == 'calc')
+@dp.callback_query(F.text == 'Расчитать')
 async def set_age(call: CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(call.id)
     await state.set_state(UserState.age)
