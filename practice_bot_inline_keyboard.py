@@ -20,7 +20,7 @@ class UserState(StatesGroup):
     age = State()
     weight = State()
 
-test_keyboard = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Расчитать')]])
+test_keyboard = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Расчитать')]], resize_keyboard=True)
 
 @dp.message(CommandStart())
 async def start(message: Message):
