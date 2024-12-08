@@ -13,7 +13,7 @@ import asyncio
 
 # import asyncio
 
-bot = Bot('7061646789:AAG93_Mw4fprHsi5aiuU7XEzr9PuYGv9XN0')
+bot = Bot('7061646789')
 dp = Dispatcher()
 
 class UserState(StatesGroup):
