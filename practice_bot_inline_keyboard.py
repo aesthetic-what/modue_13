@@ -1,6 +1,6 @@
 """aiogram 3.x"""
 
-from aiogram.types import ReplyKeyboardMarkup, ReplyKeyboardButton
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.types import CallbackQuery
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
@@ -13,7 +13,7 @@ import asyncio
 
 # import asyncio
 
-bot = Bot('7061646789')
+bot = Bot('7061646789:AAG93_Mw4fprHsi5aiuU7XEzr9PuYGv9XN0')
 dp = Dispatcher()
 
 class UserState(StatesGroup):
@@ -28,11 +28,11 @@ test_keyboard = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Расчит
 async def start(message: Message):
     await message.answer('Привет я бот помогающий твоему здоровью',reply_markup=test_keyboard)
 
-@dp.callback_query(F.text == 'Расчитать')
-async def set_age(call: CallbackQuery, state: FSMContext):
-    await bot.answer_callback_query(call.id)
+@dp.message(F.text == 'Расчитать')
+async def set_age(message: Message, state: FSMContext):
+    # await bot.answer_callback_query(call.id)
     await state.set_state(UserState.age)
-    await call.message.answer('Введите свой возраст:')
+    await message.answer('Введите свой возраст:')
 
 @dp.message(UserState.age)
 async def set_groth(message: Message, state: FSMContext):
