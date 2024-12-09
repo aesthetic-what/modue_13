@@ -1,7 +1,4 @@
-"""aiogram 3.x"""
-
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
-from aiogram.types import CallbackQuery
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 from aiogram.filters import CommandStart
@@ -22,22 +19,21 @@ class UserState(StatesGroup):
     age = State()
     weight = State()
 
-test_keyboard = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Расчитать'), KeyboardButton(text='Информация')]], resize_keyboard=True)
+test_keyboard = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Рассчитать'), KeyboardButton(text='Информация')]], resize_keyboard=True)
+
+@dp.message(F.text == 'Информация')
+async def all_message(message: Message):
+    await message.answer('Для женщин: \n(10 х вес в кг) + (6,25 х рост в см) – (5 х возраст в г) – 161\n'
+                              'Для мужчин: \n(10 х вес в кг) + (6,25 х рост в см) – (5 х возраст в г) + 5')
 
 @dp.message(CommandStart())
 async def start(message: Message):
     await message.answer('Привет я бот помогающий твоему здоровью',reply_markup=test_keyboard)
 
-@dp.message()
-async def all_message(message: Message):
-    await message.answer('Введите команду /start, чтобы начать общение.')
-    print('Введите команду /start, чтобы начать общение.')
-
-@dp.message(F.text == 'Расчитать')
+@dp.message(F.text == 'Рассчитать')
 async def set_age(message: Message, state: FSMContext):
-    # await bot.answer_callback_query(call.id)
     await state.set_state(UserState.age)
-    await message.answer('Введите свой возраст:')
+    await message.answer('Введите свой возраст:', reply_markup=ReplyKeyboardRemove())
 
 @dp.message(UserState.age)
 async def set_groth(message: Message, state: FSMContext):
@@ -55,7 +51,11 @@ async def set_weight(message: Message, state: FSMContext):
 async def set_weight(message: Message, state: FSMContext):
     await state.update_data(weight=message.text)
     await state.set_state(UserState.gender)
-    await message.answer('Введите свой пол:')
+    keyboard = ReplyKeyboardMarkup(keyboard=[[
+        KeyboardButton(text='Мужской'),
+        KeyboardButton(text='Женский')
+    ]], resize_keyboard=True)
+    await message.answer('Введите свой пол:', reply_markup=keyboard)
 
 @dp.message(UserState.gender)
 async def calculate(message: Message, state: FSMContext):
@@ -79,11 +79,7 @@ async def calculate(message: Message, state: FSMContext):
 async def main():
    await dp.start_polling(bot)
 
-@dp.callback_query(F.data == 'formula')
-async def formula(call: CallbackQuery):
-    await bot.answer_callback_query(call.id)
-    await call.message.answer('Для женщин: \n(10 х вес в кг) + (6,25 х рост в см) – (5 х возраст в г) – 161\n'
-                              'Для мужчин: \n(10 х вес в кг) + (6,25 х рост в см) – (5 х возраст в г) + 5')
+
 
 if __name__ == '__main__':
     try:
