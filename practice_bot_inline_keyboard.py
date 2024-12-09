@@ -22,11 +22,16 @@ class UserState(StatesGroup):
     age = State()
     weight = State()
 
-test_keyboard = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Расчитать')]], resize_keyboard=True)
+test_keyboard = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Расчитать'), KeyboardButton(text='Информация')]], resize_keyboard=True)
 
 @dp.message(CommandStart())
 async def start(message: Message):
     await message.answer('Привет я бот помогающий твоему здоровью',reply_markup=test_keyboard)
+
+@dp.message()
+async def all_message(message: Message):
+    await message.answer('Введите команду /start, чтобы начать общение.')
+    print('Введите команду /start, чтобы начать общение.')
 
 @dp.message(F.text == 'Расчитать')
 async def set_age(message: Message, state: FSMContext):
